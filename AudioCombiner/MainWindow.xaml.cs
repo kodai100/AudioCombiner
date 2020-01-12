@@ -98,7 +98,7 @@ namespace AudioCombiner
             data.AudioFilePathes.Clear();
         }
 
-        void GenerateButton(object sender, RoutedEventArgs e)
+        async void GenerateButton(object sender, RoutedEventArgs e)
         {
 
             ApplicationData data = this.DataContext as ApplicationData;
@@ -125,14 +125,29 @@ namespace AudioCombiner
             }
 
 
-            foreach (var file in data.AudioFilePathes)
+            data.Progress = 0;
+
+            int fileNum = data.AudioFilePathes.Count;
+            int current = 0;
+
+
+            await Task.Run(() =>
             {
-                string[] combineTarget = new string[] { data.IntroFilePath, file, data.OutroFilePath };
 
-                AudioProcess.CreateMashup(combineTarget, data.OutputDirectoryPath, System.IO.Path.GetFileNameWithoutExtension(file));
-            }
+                foreach (var file in data.AudioFilePathes)
+                {
+                    string[] combineTarget = new string[] { data.IntroFilePath, file, data.OutroFilePath };
 
+                    AudioProcess.CreateMashup(combineTarget, data.OutputDirectoryPath, System.IO.Path.GetFileNameWithoutExtension(file));
 
+                    current++;
+                    data.Progress = (int)(current / (float)fileNum * 100f);
+                }
+
+            });
+
+            data.Progress = 0;
+            MessageBox.Show("Process Finished.");
 
         }
     }

@@ -39,6 +39,15 @@ namespace AudioCombiner
             }
         }
 
+        protected int progress = 0;
+        public int Progress {
+            get { return progress; }
+            set {
+                progress = value;
+                OnPropertyChanged("Progress");
+            }
+        }
+
         public ObservableCollection<string> AudioFilePathes { get; private set; }
 
         

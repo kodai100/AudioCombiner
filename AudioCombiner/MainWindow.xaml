@@ -7,7 +7,7 @@
         mc:Ignorable="d"
 		Icon="/AudioCombiner;component/Resources/favicon.ico"
         Title="Audio Concat" 
-		Height="450" 
+		Height="500" 
 		Width="400"
 		WindowStartupLocation="CenterScreen"
 		Background="#222"
@@ -103,7 +103,16 @@
 
 
 		<StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom" Background="#444">
-			<Button Content="Generate" Name="button4" VerticalAlignment="Top" Click="GenerateButton"></Button>
+
+			<Grid VerticalAlignment="Center">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="30"/>
+					<RowDefinition Height="30"/>
+				</Grid.RowDefinitions>
+				<Button Grid.Row="0" Content="Generate" Name="button4" VerticalAlignment="Top" Click="GenerateButton"></Button>
+				<ProgressBar Margin="3 3 3 3" Grid.Row="1" Minimum="0" Maximum="100" Value="{Binding Progress}"/>
+			</Grid>
+
 		</StackPanel>
 
 	</DockPanel>
