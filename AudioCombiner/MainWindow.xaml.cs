@@ -22,6 +22,8 @@ namespace AudioCombiner
     /// </summary>
     public partial class MainWindow : Window
     {
+
+
         public MainWindow()
         {
             InitializeComponent();
@@ -32,11 +34,13 @@ namespace AudioCombiner
             
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.FilterIndex = 1;
-            openFileDialog.Filter = "Audio File(.mp3)|*.mp3|Audio File(*.wav)|*.wav";
+            openFileDialog.Filter = "Audio File(.mp3)|*.mp3";
             bool? result = openFileDialog.ShowDialog();
+
             if (result == true)
             {
-                text1.Text = openFileDialog.FileName;
+                ApplicationData data = this.DataContext as ApplicationData;
+                data.IntroFilePath = openFileDialog.FileName;
             }
         }
 
@@ -44,11 +48,33 @@ namespace AudioCombiner
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.FilterIndex = 1;
-            openFileDialog.Filter = "Audio File(.mp3)|*.mp3|Audio File(*.wav)|*.wav";
+            openFileDialog.Filter = "Audio File(.mp3)|*.mp3";
             bool? result = openFileDialog.ShowDialog();
+
             if (result == true)
             {
-                text2.Text = openFileDialog.FileName;
+                ApplicationData data = this.DataContext as ApplicationData;
+                data.OutroFilePath = openFileDialog.FileName;
+            }
+        }
+
+        void FileDrop(object sender, DragEventArgs e)
+        {
+            ApplicationData data = this.DataContext as ApplicationData;
+
+            string[] files = e.Data.GetData(DataFormats.FileDrop) as string[];
+
+            if (files != null)
+            {
+                foreach (var s in files)
+                {
+                    
+                    if (System.IO.Path.GetExtension(s) == ".mp3")
+                    {
+                        data.AudioFilePathes.Add(s);
+                    }
+                }
+                    
             }
         }
 
@@ -59,30 +85,55 @@ namespace AudioCombiner
             {
                 System.Windows.Forms.DialogResult result = dialog.ShowDialog();
 
-                text3.Text = dialog.SelectedPath;
+                ApplicationData data = this.DataContext as ApplicationData;
+                data.OutputDirectoryPath = dialog.SelectedPath;
             }
 
         }
 
-
-        private void DropList_Drop(object sender, DragEventArgs e)
+        void OnClear(object sender, RoutedEventArgs e)
         {
 
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            ApplicationData data = this.DataContext as ApplicationData;
+            data.AudioFilePathes.Clear();
+        }
+
+        void GenerateButton(object sender, RoutedEventArgs e)
+        {
+
+            ApplicationData data = this.DataContext as ApplicationData;
+
+            if (!System.IO.File.Exists(data.IntroFilePath))
             {
-                // Note that you can have more than one file.
-                string[] files = (string[]) e.Data.GetData(DataFormats.FileDrop);
-
-                // Assuming you have one file that you care about, pass it off to whatever
-                // handling code you have defined.
-
-                foreach (var file in files)
-                {
-                    lb.Items.Add(file);
-                }
-               
-                
+                MessageBox.Show("Please set correct intro file path");
             }
+
+            if (!System.IO.File.Exists(data.OutroFilePath))
+            {
+                MessageBox.Show("Please set correct outro file path");
+            }
+
+            if (!System.IO.Directory.Exists(data.OutputDirectoryPath))
+            {
+                MessageBox.Show("Please set correct output directory path");
+            }
+
+
+            if(data.AudioFilePathes.Count == 0)
+            {
+                MessageBox.Show("Please select sound files");
+            }
+
+
+            foreach (var file in data.AudioFilePathes)
+            {
+                string[] combineTarget = new string[] { data.IntroFilePath, file, data.OutroFilePath };
+
+                AudioProcess.CreateMashup(combineTarget, data.OutputDirectoryPath, System.IO.Path.GetFileNameWithoutExtension(file));
+            }
+
+
+
         }
     }
 }

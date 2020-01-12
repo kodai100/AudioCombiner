@@ -1,66 +1,113 @@
-﻿
-<Window x:Class="AudioCombiner.MainWindow"
+﻿<Window x:Class="AudioCombiner.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AudioCombiner"
         mc:Ignorable="d"
-        Title="Audio Combiner" Height="400" Width="400">
+        Title="Audio Combiner" 
+		Height="450" 
+		Width="400"
+		WindowStartupLocation="CenterScreen"
+		Background="#222"
+		>
 
-	<Grid>
+	<Window.DataContext>
+		<local:ApplicationData />
+	</Window.DataContext>
 
-		<Grid.RowDefinitions>
-			<RowDefinition Height="30" />
-			<RowDefinition Height="30" />
-			<RowDefinition Height="*" />
-			<RowDefinition Height="30" />
-			<RowDefinition Height="30" />
-		</Grid.RowDefinitions>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="1*" />
-		</Grid.ColumnDefinitions>
+	<Window.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="/MyDictionary.xaml"/>
+				<ResourceDictionary Source="Themes/MetroDark/MetroDark.MSControls.Core.Implicit.xaml" />
+				<ResourceDictionary Source="Themes/MetroDark/MetroDark.MSControls.Toolkit.Implicit.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</Window.Resources>
 
-		<DockPanel LastChildFill="True" Grid.Row="0">
-			<Button Content="..." Name="button1" Click="OnClick1" />
-			<TextBox Name="text1">
-				Select sound of intro
-			</TextBox>
-		</DockPanel>
+	<DockPanel>
 
-		<DockPanel LastChildFill="True" Grid.Row="1">
-			<Button Content="..." Name="button2" Click="OnClick2" />
-			<TextBox Name="text2">
-				Select sound of outro
-			</TextBox>
-		</DockPanel>
+		<StackPanel Name="SettingPanel" Margin="5" DockPanel.Dock="Top" VerticalAlignment="Center">
+
+			<TabControl Background="Transparent" BorderBrush="#444" Margin="5,5,5,0">
+				<TabItem Header="Settings" VerticalAlignment="Center" Padding="0,1,0,0" Height="25" FontSize="13.333" Margin="0" Width="80" HorizontalContentAlignment="Stretch" HorizontalAlignment="Center" Foreground="#FFACACAC" Background="{x:Null}">
+
+					<StackPanel Margin="5"  VerticalAlignment="Center">
+
+						<Grid Margin="5,5,5,0" VerticalAlignment="Center">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="90"/>
+								<ColumnDefinition Width="4*"/>
+								<ColumnDefinition Width="30"/>
+							</Grid.ColumnDefinitions>
+							<Label Grid.Column="0">Intro file</Label>
+							<TextBox Name="text1" Text="{Binding IntroFilePath}" Margin="0" TextWrapping="Wrap" AutomationProperties.HelpText="Set application path" Grid.Column="1"/>
+							<Button  Grid.Column="2" Content="..." Name="button1" Click="OnClick1"></Button>
+						</Grid>
+
+						<Grid Margin="5,5,5,0" VerticalAlignment="Center">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="90"/>
+								<ColumnDefinition Width="4*"/>
+								<ColumnDefinition Width="30"/>
+							</Grid.ColumnDefinitions>
+							<Label Grid.Column="0">Outro file</Label>
+							<TextBox Name="text2" Text="{Binding OutroFilePath}" Margin="0" TextWrapping="Wrap" AutomationProperties.HelpText="Set application path" Grid.Column="1"/>
+							<Button  Grid.Column="2" Content="..." Name="button2" Click="OnClick2"></Button>
+						</Grid>
 
 
+						<Grid Margin="5,5,5,0" VerticalAlignment="Center">
+							<Grid.RowDefinitions>
+								<RowDefinition Height="30" />
+								<RowDefinition Height="150" />
+								<RowDefinition Height="30" />
+							</Grid.RowDefinitions>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="1*" />
+							</Grid.ColumnDefinitions>
+							<Label Grid.Row="0" >Target sound files (.mp3)</Label>
+							<ListBox Name="lb" Grid.Row="1"  ItemsSource="{Binding AudioFilePathes}" SelectionMode="Single" Drop="FileDrop"  AllowDrop="True">
+							</ListBox>
+							<Button  Grid.Row="2" Content="Clear" Name="buttonClear" Click="OnClear"></Button>
+						</Grid>
 
-		<DockPanel LastChildFill="True" Grid.Row="3">
-			<Button Content="..." Name="button3" Click="OnClick3" />
-			<TextBox Name="text3">
-				Select output folder
-			</TextBox>
-		</DockPanel>
+						<Grid Margin="5,5,5,0" VerticalAlignment="Center">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="90"/>
+								<ColumnDefinition Width="4*"/>
+								<ColumnDefinition Width="30"/>
+							</Grid.ColumnDefinitions>
+							<Label Grid.Column="0">Output dir</Label>
+							<TextBox Name="text3" Text="{Binding OutputDirectoryPath}" Margin="0" TextWrapping="Wrap" AutomationProperties.HelpText="Set application path" Grid.Column="1"/>
+							<Button  Grid.Column="2" Content="..." Name="button3" Click="OnClick3"></Button>
+						</Grid>
 
-		<StackPanel Grid.Row="4">
-			<Button Content="Generate" Name="button4" VerticalAlignment="Top" Click="OnClick2" Grid.ColumnSpan="2"/>
+
+					</StackPanel>
+				</TabItem>
+
+
+				<TabItem Header="Help" Height="25" FontSize="13.333" Width="80" HorizontalAlignment="Center" VerticalAlignment="Center">
+					<TextBlock TextWrapping="Wrap" Text="Contact me : kodai100@gmail.com" Margin="5" Height="30" Padding="0,6,0,0" />
+				</TabItem>
+
+			</TabControl>
+
+
+			
+
 		</StackPanel>
 
-		<ListBox Name="lb" SelectionMode="Single" Grid.Row="2" Drop="DropList_Drop"  AllowDrop="True">
-		</ListBox>
 
-		<Grid.Resources>
-			<ResourceDictionary>
-				<ResourceDictionary.MergedDictionaries>
-					<ResourceDictionary Source="Themes/MetroDark/MetroDark.MSControls.Core.Implicit.xaml" />
-					<ResourceDictionary Source="Themes/MetroDark/MetroDark.MSControls.Toolkit.Implicit.xaml" />
-				</ResourceDictionary.MergedDictionaries>
-			</ResourceDictionary>
-		</Grid.Resources>
+		<StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom" Background="#444">
+			<Button Content="Generate" Name="button4" VerticalAlignment="Top" Click="GenerateButton"></Button>
+		</StackPanel>
 
-	</Grid>
+	</DockPanel>
+
+
 
 </Window>
 
