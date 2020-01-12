@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:AudioCombiner"
         mc:Ignorable="d"
 		Icon="/AudioCombiner;component/Resources/favicon.ico"
-        Title="Audio Combiner" 
+        Title="Audio Concat" 
 		Height="450" 
 		Width="400"
 		WindowStartupLocation="CenterScreen"
